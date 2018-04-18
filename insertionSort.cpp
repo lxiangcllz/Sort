@@ -66,3 +66,63 @@ int main() {
 	}
 	return 0;
 }
+
+
+//用链表实现插入排序
+typedef struct node
+{
+    int data;
+    struct node *next;
+}Node;
+
+void insertAfter(Node *p, Node *pNew)//在指针变量p指向的节点后插入指针变量pNew指向的节点
+{
+    if(p == NULL || pNew == NULL)//安全检查
+    {
+        return;
+    }
+    pNew->next = p->next;
+    p->next = pNew;
+}
+
+void listInsertBySort(Node **phead, int data)
+{
+    //安全检查
+    if(phead == NULL)
+    {
+        return;
+    }
+    //创建新节点
+    Node *pNew = createNode(data);
+    if(pNew == NULL)
+    {
+        return;
+    }
+    if(*phead == NULL)//head为空，原链表中无节点
+    {
+        *phead = pNew;
+        return;//退出函数返回
+    }
+    //否则原链表中有节点
+    //找第一个比data大的节点的前一个节点，并由prev记录
+    Node *p = *phead;//由p遍历链表已有的节点
+    Node *prev = NULL;//prev指向p所指向的节点的前一个节点
+    while(p != NULL)
+    {
+        if(p->data > data)//找到了第一个比data大的节点
+        {
+            break;//退出循环
+        }
+        prev = p;
+        p = p->next;
+    }
+    if(prev != NULL)
+    {
+        insertAfter(prev, pNew);
+    }else
+    {
+        //插入到链表的头部
+        pNew->next = *phead;//*phead即head
+        *phead = pNew;
+    }
+}
